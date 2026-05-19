@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TFind 管理端 - 用户管理</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>TFind</h2>
+            <span>管理端</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a th:href="@{/admin}">仪表盘</a></li>
+            <li class="active"><a th:href="@{/admin/users}">用户管理</a></li>
+            <li><a th:href="@{/admin/toilets}">厕所管理</a></li>
+            <li><a th:href="@{/admin/toilets/pending}">审核管理</a></li>
+            <li><a th:href="@{/admin/deleted}">删除管理</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}">退出登录</a>
+        </div>
+    </nav>
+    <main class="content">
+        <div class="page-header">
+            <h1>用户管理</h1>
+        </div>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>用户ID</th>
+                    <th>角色</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.userId}">userId</td>
+                    <td>
+                        <span class="badge" th:classappend="${user.role == 'ADMIN'} ? 'badge-admin' : 'badge-user'"
+                              th:text="${user.role}">user</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-active" th:if="${user.delUser == null or !user.delUser}">正常</span>
+                        <span class="badge badge-deleted" th:if="${user.delUser != null and user.delUser}">已删除</span>
+                    </td>
+                    <td class="action-cell">
+                        <button class="btn btn-sm btn-primary"
+                                th:if="${user.role != 'ADMIN'}"
+                                th:attr="onclick='addAdmin(\'' + ${user.userId} + '\')'">设为管理员</button>
+                        <button class="btn btn-sm btn-warning"
+                                th:if="${user.role == 'ADMIN'}"
+                                th:attr="onclick='removeAdmin(\'' + ${user.userId} + '\')'">取消管理员</button>
+                        <button class="btn btn-sm btn-danger"
+                                th:if="${user.delUser == null or !user.delUser}"
+                                th:attr="onclick='deleteUser(\'' + ${user.userId} + '\')'">删除用户</button>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="4" class="empty-row">暂无用户数据</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

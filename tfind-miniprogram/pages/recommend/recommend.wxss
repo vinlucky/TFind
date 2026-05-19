@@ -1,0 +1,99 @@
+.mode-section {
+  margin-bottom: 20rpx;
+}
+
+.mode-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 12rpx;
+}
+
+.mode-item {
+  display: flex;
+  align-items: center;
+  margin-right: 32rpx;
+  margin-bottom: 8rpx;
+  font-size: 28rpx;
+}
+
+.mode-item radio {
+  transform: scale(0.8);
+  margin-right: 4rpx;
+}
+
+.toilet-card {
+  margin-bottom: 16rpx;
+}
+
+.card-top {
+  margin-bottom: 12rpx;
+}
+
+.card-left {
+  flex: 1;
+}
+
+.card-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.card-info {
+  font-size: 24rpx;
+  color: #888888;
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ai-badge {
+  background: linear-gradient(135deg, #7b68ee, #9c27b0);
+  border-radius: 16rpx;
+  padding: 4rpx 16rpx;
+  margin-bottom: 8rpx;
+}
+
+.ai-badge-text {
+  font-size: 22rpx;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.card-distance {
+  font-size: 26rpx;
+  color: #4A90D9;
+  font-weight: 500;
+}
+
+.card-scores {
+  margin-bottom: 8rpx;
+}
+
+.score-text {
+  font-size: 26rpx;
+  color: #f5a623;
+  margin-right: 20rpx;
+}
+
+.ai-tag {
+  background-color: #ede7f6 !important;
+  color: #7b68ee !important;
+}
+
+.card-address {
+  font-size: 24rpx;
+  color: #999999;
+  margin-top: 8rpx;
+}
+
+.loading-text {
+  color: #999999;
+  font-size: 28rpx;
+}

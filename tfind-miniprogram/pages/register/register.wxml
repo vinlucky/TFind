@@ -1,0 +1,26 @@
+<view class="register-container">
+  <view class="logo-area">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="app-name">TFind</text>
+    <text class="app-desc">创建新账号</text>
+  </view>
+
+  <view class="form-area">
+    <view class="input-group">
+      <input class="input-field" placeholder="用户名" placeholder-class="placeholder-text" value="{{userId}}" bindinput="onUserIdInput" />
+      <text class="input-hint">只能使用英文字母数字或普通符号</text>
+    </view>
+    <view class="input-group">
+      <input class="input-field" placeholder="密码" placeholder-class="placeholder-text" password="true" value="{{password}}" bindinput="onPasswordInput" />
+    </view>
+    <view class="input-group">
+      <input class="input-field" placeholder="确认密码" placeholder-class="placeholder-text" password="true" value="{{confirmPassword}}" bindinput="onConfirmPasswordInput" />
+    </view>
+
+    <button class="btn-primary register-btn" bindtap="doRegister">注 册</button>
+
+    <view class="login-link">
+      <text class="link-text" bindtap="goToLogin">已有账号？返回登录</text>
+    </view>
+  </view>
+</view>

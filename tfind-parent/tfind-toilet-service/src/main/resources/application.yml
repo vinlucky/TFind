@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+berkeleydb:
+  dir: data/tfind_toilet_db
+
+folkmq:
+  server-url: folkmq://127.0.0.1:18082
+  client-name: toilet-service
+
+spring:
+  redis:
+    host: localhost
+    port: 6379
+
+grpc:
+  server:
+    port: 9092
+  client:
+    user-service:
+      address: 'static://127.0.0.1:9091'
+
+jwt:
+  secret: tfind-jwt-secret-key-2024-must-be-at-least-256-bits-long-for-hs256
+
+ai:
+  dashscope:
+    api-key: ${DASHSCOPE_API_KEY:}
+    endpoint: dashscope.aliyuncs.com
+    model: ${DASHSCOPE_MODEL:qwen-plus}
+    vision-model: ${DASHSCOPE_VISION_MODEL:qwen-vl-plus}

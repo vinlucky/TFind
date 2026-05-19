@@ -1,0 +1,179 @@
+<view class="container" wx:if="{{toilet}}">
+  <view class="detail-header section">
+    <view class="flex-between">
+      <text class="toilet-name">{{toilet.name}}</text>
+      <text class="toilet-distance" wx:if="{{toilet.distanceText}}">{{toilet.distanceText}}</text>
+    </view>
+    <view class="score-row" wx:if="{{toilet.cleanScore || toilet.score || toilet.aiScore}}">
+      <text class="score-item" wx:if="{{toilet.cleanScore}}">卫生 {{toilet.cleanScore}}</text>
+      <text class="score-item" wx:if="{{toilet.score}}">评分 {{toilet.score}}</text>
+      <text class="ai-score" wx:if="{{toilet.aiScore}}">AI {{toilet.aiScore}}</text>
+    </view>
+    <view class="reviewer-row" wx:if="{{toilet.reviewer}}">
+      <text class="reviewer-text">审核人: {{toilet.reviewer}}</text>
+    </view>
+    <view class="info-row">
+      <text wx:if="{{toilet.floor}}">{{toilet.floor}}</text>
+      <text wx:if="{{toilet.positions}}"> · {{toilet.positions}}个位</text>
+      <text wx:if="{{toilet.isFree}}"> · 免费</text>
+      <text wx:elif="{{!toilet.isFree}}"> · 收费</text>
+      <text wx:if="{{toilet.is24Hours}}"> · 24小时</text>
+    </view>
+    <view class="tags-row" wx:if="{{toilet.tags && toilet.tags.length > 0}}">
+      <text class="tag tag-active" wx:for="{{toilet.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+    </view>
+    <view class="tags-row" wx:if="{{toilet.aiTags && toilet.aiTags.length > 0}}">
+      <text class="tag ai-tag" wx:for="{{toilet.aiTags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+    </view>
+    <view class="address-row" wx:if="{{toilet.address}}">
+      <text class="address-text">{{toilet.address}}</text>
+    </view>
+    <view class="facility-row" wx:if="{{toilet.hasMotherRoom || toilet.hasAccessibility || toilet.isQueuing}}">
+      <text class="facility-tag" wx:if="{{toilet.hasMotherRoom}}">母婴室</text>
+      <text class="facility-tag" wx:if="{{toilet.hasAccessibility}}">无障碍</text>
+      <text class="facility-tag queuing" wx:if="{{toilet.isQueuing}}">排队中{{toilet.queueTime ? ' ~' + toilet.queueTime + 'min' : ''}}</text>
+    </view>
+    <view class="photo-row" wx:if="{{toilet.photoUrl}}">
+      <image src="{{toilet.photoUrl}}" mode="widthFix" class="toilet-photo" bindtap="previewImage" data-url="{{toilet.photoUrl}}"></image>
+    </view>
+    <view class="ai-analysis" wx:if="{{toilet.aiAnalysis}}">
+      <text class="ai-label">AI分析</text>
+      <text class="ai-content">{{toilet.aiAnalysis}}</text>
+    </view>
+    <view class="action-row">
+      <button class="btn-outline nav-btn" bindtap="openMap">导航前往</button>
+    </view>
+  </view>
+
+  <view class="action-buttons section">
+    <view class="btn-group">
+      <view class="action-btn" bindtap="toggleReviewForm">
+        <text class="action-icon">✍</text>
+        <text class="action-text">写评论</text>
+      </view>
+      <view class="action-btn" bindtap="toggleUpdateForm">
+        <text class="action-icon">📝</text>
+        <text class="action-text">更新信息</text>
+      </view>
+      <view class="action-btn" bindtap="toggleReportForm">
+        <text class="action-icon">⚠</text>
+        <text class="action-text">举报</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="review-form section" wx:if="{{showReviewForm}}">
+    <view class="section-title">写评论</view>
+    <textarea class="textarea-field" placeholder="分享你的体验..." value="{{reviewContent}}" bindinput="onReviewContentInput" maxlength="500" />
+    <view class="form-group">
+      <text class="form-label">评分</text>
+      <slider min="1" max="5" step="1" value="{{reviewScore}}" show-value="true" bindchange="onReviewScoreChange" activeColor="#4A90D9" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">标签</text>
+      <view class="tags-area">
+        <view class="tag {{reviewTags.indexOf(item) > -1 ? 'tag-active' : 'tag-normal'}}"
+          wx:for="{{reviewTagOptions}}" wx:key="*this"
+          bindtap="onReviewTagTap" data-tag="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="submitReview">提交评论</button>
+  </view>
+
+  <view class="update-form section" wx:if="{{showUpdateForm}}">
+    <view class="section-title">更新信息</view>
+    <view class="form-group">
+      <text class="form-label">评分</text>
+      <slider min="1" max="5" step="1" value="{{updateScore}}" show-value="true" bindchange="onUpdateScoreChange" activeColor="#4A90D9" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">标签</text>
+      <view class="tags-area">
+        <view class="tag {{updateTags.indexOf(item) > -1 ? 'tag-active' : 'tag-normal'}}"
+          wx:for="{{updateTagOptions}}" wx:key="*this"
+          bindtap="onUpdateTagTap" data-tag="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+    <view class="switch-row" bindtap="toggleUpdateIsFree">
+      <text>免费</text>
+      <switch checked="{{updateIsFree}}" color="#4A90D9" />
+    </view>
+    <view class="switch-row" bindtap="toggleUpdateHasMotherRoom">
+      <text>母婴室</text>
+      <switch checked="{{updateHasMotherRoom}}" color="#4A90D9" />
+    </view>
+    <view class="switch-row" bindtap="toggleUpdateHasAccessibility">
+      <text>无障碍</text>
+      <switch checked="{{updateHasAccessibility}}" color="#4A90D9" />
+    </view>
+    <view class="switch-row" bindtap="toggleUpdateIs24Hours">
+      <text>24小时</text>
+      <switch checked="{{updateIs24Hours}}" color="#4A90D9" />
+    </view>
+    <view class="switch-row" bindtap="toggleUpdateIsQueuing">
+      <text>排队中</text>
+      <switch checked="{{updateIsQueuing}}" color="#4A90D9" />
+    </view>
+    <view wx:if="{{updateIsQueuing}}">
+      <input class="input-field" placeholder="预计排队时间(分钟)" type="number" value="{{updateQueueTime}}" bindinput="onUpdateQueueTimeInput" />
+    </view>
+    <textarea class="textarea-field" placeholder="补充说明..." value="{{updateContent}}" bindinput="onUpdateContentInput" maxlength="500" />
+    <button class="btn-primary" bindtap="submitUpdate">提交更新</button>
+  </view>
+
+  <view class="report-form section" wx:if="{{showReportForm}}">
+    <view class="section-title">举报</view>
+    <picker mode="selector" range="{{reportTypes}}" bindchange="onReportTypeChange">
+      <view class="picker-field">
+        <text wx:if="{{reportType}}">{{reportType}}</text>
+        <text wx:else class="placeholder-text">选择举报类型</text>
+      </view>
+    </picker>
+    <textarea class="textarea-field" placeholder="详细描述..." value="{{reportContent}}" bindinput="onReportContentInput" maxlength="500" />
+    <button class="btn-danger" bindtap="submitReport">提交举报</button>
+  </view>
+
+  <view class="reviews-section section">
+    <view class="section-title">评论 ({{reviews.length}})</view>
+    <view wx:if="{{reviews.length === 0}}" class="empty-tip">
+      <text>暂无评论</text>
+    </view>
+    <view wx:else>
+      <view class="review-item" wx:for="{{reviews}}" wx:key="id">
+        <view class="review-header flex-between">
+          <view class="review-user">
+            <text class="review-username">{{item.userName || '匿名用户'}}</text>
+            <text class="review-score" wx:if="{{item.score}}">{{item.score}}分</text>
+          </view>
+          <view class="review-actions">
+            <text class="delete-btn" wx:if="{{item.openid === currentUserId || isAdmin}}" bindtap="deleteReview" data-id="{{item.id}}">删除</text>
+          </view>
+        </view>
+        <text class="review-content">{{item.content}}</text>
+        <view class="review-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+          <text class="tag tag-normal" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+        </view>
+        <text class="review-time" wx:if="{{item.createTime}}">{{item.createTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="updates-section section" wx:if="{{reviewUpdates.length > 0}}">
+    <view class="section-title">信息更新 ({{reviewUpdates.length}})</view>
+    <view class="update-item" wx:for="{{reviewUpdates}}" wx:key="id">
+      <view class="update-header">
+        <text class="update-user">{{item.userName || '匿名用户'}}</text>
+        <text class="update-score" wx:if="{{item.score}}">{{item.score}}分</text>
+      </view>
+      <view class="update-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+        <text class="tag tag-normal" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+      <text class="update-content" wx:if="{{item.content}}">{{item.content}}</text>
+      <text class="update-time" wx:if="{{item.createTime}}">{{item.createTime}}</text>
+    </view>
+  </view>
+</view>

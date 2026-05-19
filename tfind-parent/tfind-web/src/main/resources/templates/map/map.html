@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TFind - 地图</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #map { width: 100%; height: 100vh; z-index: 1; }
+        .top-bar {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        .top-bar input {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            width: 280px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            outline: none;
+        }
+        .top-bar input:focus { border-color: #4A90D9; }
+        .top-bar button {
+            padding: 10px 20px;
+            background: #4A90D9;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .top-bar button:hover { background: #3a7bc8; }
+        .toilet-popup h3 { margin: 0 0 4px; font-size: 15px; }
+        .toilet-popup p { margin: 2px 0; font-size: 13px; color: #666; }
+        .toilet-popup .tags span {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin: 2px 4px 2px 0;
+        }
+        .toilet-popup .btn-detail {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 16px;
+            background: #4A90D9;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 12px;
+        }
+        .legend-item { display: flex; align-items: center; margin: 4px 0; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+    </style>
+</head>
+<body>
+<div class="top-bar">
+    <input type="text" id="searchInput" placeholder="搜索厕所名称或地址..."/>
+    <button onclick="searchToilets()">搜索</button>
+    <button onclick="locateMe()">定位</button>
+</div>
+
+<div id="map"></div>
+
+<div class="legend">
+    <div style="font-weight:600;margin-bottom:6px;">评分图例</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div>4.5分以上</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4A90D9"></div>3.5-4.5分</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff9800"></div>2.5-3.5分</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>2.5分以下</div>
+</div>
+
+<script th:inline="javascript">
+    var toilets = /*[[${toilets}]]*/ [];
+
+    var map = L.map('map', { zoomControl: true }).setView([22.3193, 114.1694], 13);
+
+    L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+        subdomains: ['1', '2', '3', '4'],
+        maxZoom: 18,
+        attribution: '&copy; 高德地图'
+    }).addTo(map);
+
+    function getMarkerColor(score) {
+        if (score >= 4.5) return '#2e7d32';
+        if (score >= 3.5) return '#4A90D9';
+        if (score >= 2.5) return '#ff9800';
+        return '#ff4757';
+    }
+
+    function createIcon(color) {
+        return L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="width:24px;height:24px;background:' + color + ';border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+    }
+
+    toilets.forEach(function(t) {
+        if (t.latitude && t.longitude) {
+            var color = getMarkerColor(t.score || 0);
+            var marker = L.marker([t.latitude, t.longitude], { icon: createIcon(color) }).addTo(map);
+            var tagsHtml = '';
+            if (t.tags) {
+                t.tags.forEach(function(tag) {
+                    tagsHtml += '<span>' + tag + '</span>';
+                });
+            }
+            var popupContent = '<div class="toilet-popup">' +
+                '<h3>' + (t.name || '未命名') + '</h3>' +
+                '<p>评分: ' + (t.score || 0) + '</p>' +
+                (t.address ? '<p>地址: ' + t.address + '</p>' : '') +
+                (t.tags ? '<div class="tags">' + tagsHtml + '</div>' : '') +
+                '<a class="btn-detail" href="#" onclick="goToDetail(\'' + t.id + '\')">查看详情</a>' +
+                '</div>';
+            marker.bindPopup(popupContent);
+        }
+    });
+
+    function locateMe() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 15);
+            });
+        }
+    }
+
+    function searchToilets() {
+        var keyword = document.getElementById('searchInput').value.toLowerCase();
+        if (!keyword) return;
+        toilets.forEach(function(t) {
+            if (t.latitude && t.longitude) {
+                var match = (t.name && t.name.toLowerCase().indexOf(keyword) !== -1) ||
+                            (t.address && t.address.toLowerCase().indexOf(keyword) !== -1);
+                if (match) {
+                    map.setView([t.latitude, t.longitude], 15);
+                }
+            }
+        });
+    }
+
+    function goToDetail(id) {
+        alert('查看详情: ' + id);
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') searchToilets();
+    });
+</script>
+</body>
+</html>

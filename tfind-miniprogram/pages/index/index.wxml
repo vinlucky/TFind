@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="search-section section">
+    <view class="section-title">附近厕所</view>
+    <view class="location-row">
+      <text class="location-status" wx:if="{{locationReady}}">定位已就绪</text>
+      <text class="location-status location-error" wx:else>未获取定位</text>
+      <button class="btn-location" bindtap="refreshLocation" size="mini">重新定位</button>
+    </view>
+    <view class="mode-row">
+      <text class="mode-label">推荐模式</text>
+      <radio-group class="mode-group" bindchange="onModeChange">
+        <label class="mode-item">
+          <radio value="speed" checked="{{mode==='speed'}}" color="#4A90D9" />
+          <text>最快到达</text>
+        </label>
+        <label class="mode-item">
+          <radio value="clean" checked="{{mode==='clean'}}" color="#4A90D9" />
+          <text>最干净</text>
+        </label>
+        <label class="mode-item">
+          <radio value="smart" checked="{{mode==='smart'}}" color="#4A90D9" />
+          <text>智能推荐</text>
+        </label>
+      </radio-group>
+    </view>
+    <view class="distance-row">
+      <text class="mode-label">搜索范围</text>
+      <slider min="1" max="20" step="0.5" value="{{distance}}" show-value="true" bindchange="onDistanceChange" activeColor="#4A90D9" />
+    </view>
+    <button class="btn-primary find-btn" bindtap="startFind" disabled="{{loading}}">
+      {{loading ? '搜索中...' : '开始查找'}}
+    </button>
+  </view>
+
+  <view class="result-section" wx:if="{{searched}}">
+    <view wx:if="{{loading}}" class="loading-container">
+      <text class="loading-text">搜索中...</text>
+    </view>
+    <view wx:elif="{{hasResult}}">
+      <view class="toilet-card section" wx:for="{{toilets}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+        <view class="card-header flex-between">
+          <text class="toilet-name">{{item.name}}</text>
+          <text class="toilet-distance">{{item.distanceText}}</text>
+        </view>
+        <view class="card-info">
+          <text class="info-item" wx:if="{{item.floor}}">{{item.floor}}</text>
+          <text class="info-item" wx:if="{{item.positions}}">{{item.positions}}个位</text>
+          <text class="info-item score-item" wx:if="{{item.cleanScore}}">卫生 {{item.cleanScore}}</text>
+          <text class="info-item score-item" wx:if="{{item.score}}">评分 {{item.score}}</text>
+          <text class="info-item ai-score-item" wx:if="{{item.aiScore}}">AI {{item.aiScore}}</text>
+        </view>
+        <view class="card-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+          <text class="tag tag-active" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+        </view>
+        <view class="card-address ellipsis" wx:if="{{item.address}}">
+          <text>{{item.address}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty-tip">
+      <text>附近没有找到厕所</text>
+    </view>
+  </view>
+
+  <view class="recommend-entry" wx:if="{{!searched}}">
+    <view class="section recommend-card" bindtap="goToRecommend">
+      <text class="recommend-title">智能推荐</text>
+      <text class="recommend-desc">基于AI分析为您推荐最佳厕所</text>
+    </view>
+  </view>
+</view>

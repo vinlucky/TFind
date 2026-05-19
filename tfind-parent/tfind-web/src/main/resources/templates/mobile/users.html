@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>用户管理</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #333; padding-bottom: 60px; }
+        .header { background: #4A90D9; color: #fff; padding: 16px; display: flex; align-items: center; }
+        .header a { color: #fff; text-decoration: none; font-size: 16px; margin-right: 12px; }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        .container { padding: 12px; }
+        .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 10px; }
+        .card .name { font-size: 16px; font-weight: 600; }
+        .card .info { font-size: 13px; color: #666; margin-top: 4px; }
+        .card .actions { margin-top: 10px; display: flex; gap: 8px; }
+        .card .actions button {
+            flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 13px; cursor: pointer;
+        }
+        .btn-admin { background: #ff6b6b; color: #fff; }
+        .btn-del { background: #ff4757; color: #fff; }
+        .role-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; background: #e8f5e9; color: #2e7d32; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; display: flex; height: 56px; z-index: 100; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #999; font-size: 10px; }
+        .nav-item.active { color: #4A90D9; }
+        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <a th:href="@{/admin}">&lt;</a>
+    <h1>用户管理</h1>
+</div>
+
+<div class="container">
+    <div class="card" th:each="user : ${users}">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div class="name" th:text="${user.userId}">User</div>
+            <span class="role-badge" th:if="${user.role == 'ADMIN'}" th:text="'管理员'"></span>
+        </div>
+        <div class="info" th:text="'角色: ' + ${user.role}"></div>
+        <div class="actions">
+            <button class="btn-admin" th:if="${user.role != 'ADMIN'}" th:attr="data-userid=${user.userId}" onclick="addAdmin(this.getAttribute('data-userid'))">设为管理员</button>
+            <button class="btn-admin" th:if="${user.role == 'ADMIN'}" style="background:#ffa502;" th:attr="data-userid=${user.userId}" onclick="removeAdmin(this.getAttribute('data-userid'))">取消管理员</button>
+            <button class="btn-del" th:attr="data-userid=${user.userId}" onclick="deleteUser(this.getAttribute('data-userid'))">删除用户</button>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a th:href="@{/admin}" class="nav-item"><span class="nav-icon">🏠</span><span>首页</span></a>
+    <a th:href="@{/admin/users}" class="nav-item active"><span class="nav-icon">👥</span><span>用户</span></a>
+    <a th:href="@{/admin/toilets}" class="nav-item"><span class="nav-icon">🚻</span><span>厕所</span></a>
+    <a th:href="@{/logout}" class="nav-item"><span class="nav-icon">🚪</span><span>退出</span></a>
+</div>
+
+<script th:inline="javascript">
+    function addAdmin(userId) {
+        if (!confirm('确定将 ' + userId + ' 设为管理员？')) return;
+        fetch('/admin/user/' + userId + '/add-admin', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => { if (data.success) location.reload(); });
+    }
+    function removeAdmin(userId) {
+        if (!confirm('确定取消 ' + userId + ' 的管理员权限？')) return;
+        fetch('/admin/user/' + userId + '/remove-admin', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => { if (data.success) location.reload(); });
+    }
+    function deleteUser(userId) {
+        if (!confirm('确定删除用户 ' + userId + '？')) return;
+        fetch('/admin/user/' + userId, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => { if (data.success) location.reload(); });
+    }
+</script>
+</body>
+</html>

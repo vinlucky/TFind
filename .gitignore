@@ -1,0 +1,102 @@
+# ========================
+# IDE & Editor
+# ========================
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.factorypath
+
+# ========================
+# Java / Maven
+# ========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+
+# Maven wrapper (keep if using)
+!.mvn/wrapper/maven-wrapper.jar
+
+# ========================
+# Build Output
+# ========================
+build/
+out/
+dist/
+.gradle/
+
+# ========================
+# Environment & Config
+# ========================
+.env
+.env.local
+.env.*.local
+*.env
+
+# ========================
+# Data & Database
+# ========================
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.jdb
+je.info.*
+je.lck
+
+# ========================
+# Uploads / User Files
+# ========================
+uploads/
+file/
+
+# ========================
+# Node.js (MiniProgram / CLI)
+# ========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Python (if applicable)
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.Python
+
+# ========================
+# OS Generated
+# ========================
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+
+# ========================
+# Temporary
+# ========================
+*.tmp
+*.temp
+*.bak
+*.swp
+~$*

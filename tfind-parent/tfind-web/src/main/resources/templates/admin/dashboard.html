@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TFind 管理端 - 仪表盘</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>TFind</h2>
+            <span>管理端</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="active"><a th:href="@{/admin}">仪表盘</a></li>
+            <li><a th:href="@{/admin/users}">用户管理</a></li>
+            <li><a th:href="@{/admin/toilets}">厕所管理</a></li>
+            <li><a th:href="@{/admin/toilets/pending}">审核管理</a></li>
+            <li><a th:href="@{/admin/deleted}">删除管理</a></li>
+            <li><a th:href="@{/change-password}">修改密码</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}">退出登录</a>
+        </div>
+    </nav>
+    <main class="content">
+        <div class="page-header">
+            <h1>仪表盘</h1>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card stat-users">
+                <div class="stat-icon">&#128100;</div>
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${userCount}">0</span>
+                    <span class="stat-label">用户总数</span>
+                </div>
+            </div>
+            <div class="stat-card stat-toilets">
+                <div class="stat-icon">&#128701;</div>
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${toiletCount}">0</span>
+                    <span class="stat-label">厕所总数</span>
+                </div>
+            </div>
+            <div class="stat-card stat-pending">
+                <div class="stat-icon">&#9203;</div>
+                <div class="stat-info">
+                    <span class="stat-value" th:text="${pendingCount}">0</span>
+                    <span class="stat-label">待审核</span>
+                </div>
+            </div>
+        </div>
+        <div class="quick-actions">
+            <h3>快捷操作</h3>
+            <div class="action-buttons">
+                <a th:href="@{/admin/users}" class="btn btn-primary">管理用户</a>
+                <a th:href="@{/admin/toilets}" class="btn btn-primary">管理厕所</a>
+                <a th:href="@{/admin/toilets/pending}" class="btn btn-warning">审核厕所</a>
+                <a th:href="@{/admin/deleted}" class="btn btn-danger">删除管理</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

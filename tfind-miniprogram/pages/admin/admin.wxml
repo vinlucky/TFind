@@ -1,0 +1,99 @@
+<view class="container" wx:if="{{isAdmin}}">
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === item.key ? 'tab-active' : ''}}"
+      wx:for="{{tabs}}" wx:key="key"
+      bindtap="onTabChange" data-key="{{item.key}}">
+      {{item.name}}
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'pending'}}">
+    <view class="section" wx:if="{{pendingToilets.length === 0}}">
+      <view class="empty-tip">
+        <text>暂无待审核厕所</text>
+      </view>
+    </view>
+    <view class="admin-card section" wx:for="{{pendingToilets}}" wx:key="id">
+      <view class="card-header">
+        <text class="card-title">{{item.name}}</text>
+      </view>
+      <view class="card-info">
+        <text wx:if="{{item.address}}">{{item.address}}</text>
+        <text wx:if="{{item.floor}}"> · {{item.floor}}</text>
+        <text wx:if="{{item.positions}}"> · {{item.positions}}个位</text>
+      </view>
+      <view class="card-info">
+        <text>上传者: {{item.openid}}</text>
+      </view>
+      <view class="card-info" wx:if="{{item.reviewer}}">
+        <text class="reviewer-tag">审核人: {{item.reviewer}}</text>
+      </view>
+      <view class="card-actions">
+        <button class="btn-approve" bindtap="approveToilet" data-id="{{item.id}}">通过</button>
+        <button class="btn-reject" bindtap="rejectToilet" data-id="{{item.id}}">拒绝</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'deletedUsers'}}">
+    <view class="section" wx:if="{{deletedUsers.length === 0}}">
+      <view class="empty-tip">
+        <text>暂无已删除用户</text>
+      </view>
+    </view>
+    <view class="admin-card section" wx:for="{{deletedUsers}}" wx:key="userId">
+      <view class="card-header">
+        <text class="card-title">{{item.userId}}</text>
+        <text class="card-role">{{item.role}}</text>
+      </view>
+      <view class="card-info">
+        <text>删除时间: {{item.delTime || '未知'}}</text>
+      </view>
+      <view class="card-actions">
+        <button class="btn-restore" bindtap="restoreUser" data-userid="{{item.userId}}">恢复</button>
+        <button class="btn-physical-delete" bindtap="physicalDeleteUser" data-userid="{{item.userId}}">物理删除</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'deletedToilets'}}">
+    <view class="section" wx:if="{{deletedToilets.length === 0}}">
+      <view class="empty-tip">
+        <text>暂无已删除厕所</text>
+      </view>
+    </view>
+    <view class="admin-card section" wx:for="{{deletedToilets}}" wx:key="id">
+      <view class="card-header">
+        <text class="card-title">{{item.name}}</text>
+      </view>
+      <view class="card-info">
+        <text wx:if="{{item.address}}">{{item.address}}</text>
+      </view>
+      <view class="card-actions">
+        <button class="btn-restore" bindtap="restoreToilet" data-id="{{item.id}}">恢复</button>
+        <button class="btn-physical-delete" bindtap="physicalDeleteToilet" data-id="{{item.id}}">物理删除</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'userManage'}}">
+    <view class="section" wx:if="{{users.length === 0}}">
+      <view class="empty-tip">
+        <text>暂无用户数据</text>
+      </view>
+    </view>
+    <view class="admin-card section" wx:for="{{users}}" wx:key="userId">
+      <view class="card-header">
+        <text class="card-title">{{item.userId}}</text>
+      </view>
+      <view class="card-info">
+        <text class="badge-user">{{item.role === 'ADMIN' ? '管理员' : '普通用户'}}</text>
+      </view>
+      <view class="card-actions">
+        <button wx:if="{{item.role !== 'ADMIN'}}" class="btn-approve" bindtap="addAdminFromList" data-userid="{{item.userId}}">设为管理员</button>
+        <button wx:if="{{item.role === 'ADMIN'}}" class="btn-reject" bindtap="removeAdminFromList" data-userid="{{item.userId}}">取消管理员</button>
+        <button class="btn-physical-delete" bindtap="deleteUserFromList" data-userid="{{item.userId}}">删除用户</button>
+      </view>
+    </view>
+  </view>
+</view>

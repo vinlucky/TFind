@@ -1,0 +1,23 @@
+<view class="login-container">
+  <view class="logo-area">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="app-name">TFind</text>
+    <text class="app-desc">发现身边最近的厕所</text>
+  </view>
+
+  <view class="form-area">
+    <view class="input-group">
+      <input class="input-field" placeholder="用户名" placeholder-class="placeholder-text" value="{{userId}}" bindinput="onUserIdInput" />
+      <text class="input-hint">只能使用英文字母数字或普通符号</text>
+    </view>
+    <view class="input-group">
+      <input class="input-field" placeholder="密码" placeholder-class="placeholder-text" password="true" value="{{password}}" bindinput="onPasswordInput" />
+    </view>
+
+    <button class="btn-primary login-btn" bindtap="doLogin">登 录</button>
+
+    <view class="register-link">
+      <text class="link-text" bindtap="goToRegister">还没有账号？立即注册</text>
+    </view>
+  </view>
+</view>

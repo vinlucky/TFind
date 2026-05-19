@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package com.tfind.toilet.grpc;
+
+option java_package = "com.tfind.toilet.grpc";
+option java_outer_classname = "ToiletServiceProto";
+
+service ToiletService {
+  rpc getNearbyToilets(NearbyToiletsRequest) returns (ToiletListResponse);
+  rpc getToiletById(ToiletIdRequest) returns (ToiletResponse);
+  rpc createToilet(ToiletRequest) returns (ToiletResponse);
+  rpc updateToilet(ToiletUpdateRequest) returns (ToiletResponse);
+  rpc softDeleteToilet(ToiletIdRequest) returns (OperationResponse);
+  rpc restoreToilet(ToiletIdRequest) returns (OperationResponse);
+  rpc physicalDeleteToilet(ToiletIdRequest) returns (OperationResponse);
+  rpc getAllDeletedToilets(EmptyRequest) returns (ToiletListResponse);
+  rpc getAllToilets(EmptyRequest) returns (ToiletListResponse);
+  rpc getPendingToilets(EmptyRequest) returns (ToiletListResponse);
+  rpc approveToilet(ToiletIdRequest) returns (OperationResponse);
+  rpc rejectToilet(ToiletIdRequest) returns (OperationResponse);
+  rpc updateToiletStatus(ToiletStatusRequest) returns (OperationResponse);
+  
+  rpc getReviewsByToiletId(ToiletIdRequest) returns (ReviewListResponse);
+  rpc getReports(EmptyRequest) returns (ReportListResponse);
+  rpc updateReportStatus(ReportStatusRequest) returns (OperationResponse);
+}
+
+message NearbyToiletsRequest {
+  double lat = 1;
+  double lng = 2;
+  string mode = 3;
+  double distance = 4;
+}
+
+message ToiletIdRequest {
+  string id = 1;
+}
+
+message ToiletRequest {
+  string id = 1;
+  string name = 2;
+  double latitude = 3;
+  double longitude = 4;
+  string floor = 5;
+  int32 positions = 6;
+  double cleanScore = 7;
+  double score = 8;
+  double aiScore = 9;
+  repeated string tags = 10;
+  repeated string aiTags = 11;
+  bool hasMotherRoom = 12;
+  bool hasAccessibility = 13;
+  bool isFree = 14;
+  bool is24Hours = 15;
+  bool isQueuing = 16;
+  int32 queueTime = 17;
+  string photoUrl = 18;
+  string address = 19;
+  string openid = 20;
+  string status = 21;
+  bool deltoilet = 22;
+  int64 deltime = 23;
+  string aiAnalysis = 24;
+  int64 createTime = 25;
+  int64 updateTime = 26;
+}
+
+message ToiletUpdateRequest {
+  string id = 1;
+  ToiletRequest toilet = 2;
+}
+
+message ToiletStatusRequest {
+  string id = 1;
+  string status = 2;
+}
+
+message EmptyRequest {
+}
+
+message ToiletResponse {
+  string id = 1;
+  string name = 2;
+  double latitude = 3;
+  double longitude = 4;
+  string floor = 5;
+  int32 positions = 6;
+  double cleanScore = 7;
+  double score = 8;
+  double aiScore = 9;
+  repeated string tags = 10;
+  repeated string aiTags = 11;
+  bool hasMotherRoom = 12;
+  bool hasAccessibility = 13;
+  bool isFree = 14;
+  bool is24Hours = 15;
+  bool isQueuing = 16;
+  int32 queueTime = 17;
+  string photoUrl = 18;
+  string address = 19;
+  string openid = 20;
+  string status = 21;
+  bool deltoilet = 22;
+  int64 deltime = 23;
+  string aiAnalysis = 24;
+  int64 createTime = 25;
+  int64 updateTime = 26;
+}
+
+message ToiletListResponse {
+  repeated ToiletResponse toilets = 1;
+}
+
+message OperationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ReviewRequest {
+  string id = 1;
+  string toiletId = 2;
+  string openid = 3;
+  string userName = 4;
+  string content = 5;
+  double score = 6;
+  repeated string tags = 7;
+  string status = 8;
+  int64 createTime = 9;
+}
+
+message ReviewResponse {
+  string id = 1;
+  string toiletId = 2;
+  string openid = 3;
+  string userName = 4;
+  string content = 5;
+  double score = 6;
+  repeated string tags = 7;
+  string status = 8;
+  int64 createTime = 9;
+}
+
+message ReviewListResponse {
+  repeated ReviewResponse reviews = 1;
+}
+
+message ReportResponse {
+  string id = 1;
+  string toiletId = 2;
+  string toiletName = 3;
+  string openid = 4;
+  string reportType = 5;
+  string reportTypeName = 6;
+  string content = 7;
+  string status = 8;
+  int64 createTime = 9;
+}
+
+message ReportListResponse {
+  repeated ReportResponse reports = 1;
+}
+
+message ReportStatusRequest {
+  string reportId = 1;
+  string status = 2;
+}

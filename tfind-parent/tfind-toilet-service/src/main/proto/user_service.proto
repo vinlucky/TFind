@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package com.tfind.user.grpc;
+
+option java_package = "com.tfind.user.grpc";
+option java_outer_classname = "UserServiceProto";
+
+service UserService {
+  rpc getUser(UserRequest) returns (UserResponse);
+  rpc getUserIdByOpenid(OpenidRequest) returns (UserIdResponse);
+}
+
+message UserRequest {
+  string userId = 1;
+}
+
+message UserResponse {
+  string userId = 1;
+  string openid = 2;
+  string nickname = 3;
+  string avatarUrl = 4;
+  string role = 5;
+  int32 score = 6;
+  bool deluser = 7;
+}
+
+message OpenidRequest {
+  string openid = 1;
+}
+
+message UserIdResponse {
+  string userId = 1;
+}

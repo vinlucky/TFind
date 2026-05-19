@@ -1,0 +1,91 @@
+<view class="container">
+  <view class="section form-section">
+    <view class="section-title">上传厕所信息</view>
+
+    <view class="form-group">
+      <text class="form-label">名称</text>
+      <input class="input-field" placeholder="厕所名称（选填）" value="{{name}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">地址 *</text>
+      <view class="address-row">
+        <input class="input-field address-input" placeholder="详细地址" value="{{address}}" bindinput="onAddressInput" />
+        <button class="btn-location" bindtap="getLocationFromWx">定位</button>
+      </view>
+      <view class="location-info" wx:if="{{latitude && longitude}}">
+        <text>已获取定位: {{latitude.toFixed(6)}}, {{longitude.toFixed(6)}}</text>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">楼层</text>
+      <input class="input-field" placeholder="如：1F、B1" value="{{floor}}" bindinput="onFloorInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">坑位数</text>
+      <input class="input-field" placeholder="数量" type="number" value="{{positions}}" bindinput="onPositionsInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">卫生评分</text>
+      <slider min="1" max="5" step="1" value="{{cleanScore}}" show-value="true" bindchange="onCleanScoreChange" activeColor="#4A90D9" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">设施</text>
+      <view class="switch-row" bindtap="toggleMotherRoom">
+        <text>母婴室</text>
+        <switch checked="{{hasMotherRoom}}" color="#4A90D9" />
+      </view>
+      <view class="switch-row" bindtap="toggleAccessibility">
+        <text>无障碍</text>
+        <switch checked="{{hasAccessibility}}" color="#4A90D9" />
+      </view>
+      <view class="switch-row" bindtap="toggleFree">
+        <text>免费</text>
+        <switch checked="{{isFree}}" color="#4A90D9" />
+      </view>
+      <view class="switch-row" bindtap="toggle24Hours">
+        <text>24小时</text>
+        <switch checked="{{is24Hours}}" color="#4A90D9" />
+      </view>
+      <view class="switch-row" bindtap="toggleQueuing">
+        <text>排队中</text>
+        <switch checked="{{isQueuing}}" color="#4A90D9" />
+      </view>
+    </view>
+
+    <view class="form-group" wx:if="{{isQueuing}}">
+      <text class="form-label">预计排队时间(分钟)</text>
+      <input class="input-field" placeholder="分钟" type="number" value="{{queueTime}}" bindinput="onQueueTimeInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">标签</text>
+      <view class="tags-area">
+        <view class="tag {{tags.indexOf(item) > -1 ? 'tag-active' : 'tag-normal'}}"
+          wx:for="{{tagOptions}}" wx:key="*this"
+          bindtap="onTagTap" data-tag="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">照片 <text class="optional-hint">（建议上传，有利于审核通过）</text></text>
+      <view class="photo-area" bindtap="chooseImage">
+        <image wx:if="{{photoUrl}}" src="{{baseUrl}}{{photoUrl}}" mode="aspectFill" class="photo-preview"></image>
+        <view wx:else class="photo-placeholder">
+          <text class="photo-icon">+</text>
+          <text class="photo-text">添加照片</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn-primary submit-btn" bindtap="submitForm" disabled="{{submitting}}">
+      {{submitting ? '提交中...' : '提交'}}
+    </button>
+  </view>
+</view>

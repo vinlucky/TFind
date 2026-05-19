@@ -1,0 +1,68 @@
+<view class="container">
+  <view wx:if="{{!isLogin}}" class="login-area">
+    <view class="avatar-placeholder">
+      <text class="avatar-icon">👤</text>
+    </view>
+    <text class="login-tip">登录后查看个人信息</text>
+    <button class="btn-primary login-btn" bindtap="doLogin">登录 / 注册</button>
+  </view>
+
+  <view wx:else>
+    <view class="user-header section">
+      <view class="user-info flex-row">
+        <view class="user-avatar">
+          <text class="avatar-text">{{userInfo.userId[0]}}</text>
+        </view>
+        <view class="user-detail">
+          <text class="user-name">{{userInfo.userId}}</text>
+          <text class="user-role" wx:if="{{isAdmin}}">管理员</text>
+        </view>
+      </view>
+      <view class="stats-row">
+        <view class="stat-item">
+          <text class="stat-num">{{stats.uploadCount || 0}}</text>
+          <text class="stat-label">上传</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-num">{{stats.reviewCount || 0}}</text>
+          <text class="stat-label">评论</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-num">{{stats.updateCount || 0}}</text>
+          <text class="stat-label">更新</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section section">
+      <view class="menu-item flex-between" bindtap="goToChangePassword">
+        <text>修改密码</text>
+        <text class="menu-arrow">></text>
+      </view>
+      <view class="menu-item flex-between" bindtap="goToAdmin" wx:if="{{isAdmin}}">
+        <text>管理后台</text>
+        <text class="menu-arrow">></text>
+      </view>
+    </view>
+
+    <view class="history-section section">
+      <view class="section-title">我上传的厕所</view>
+      <view wx:if="{{historyList.length === 0}}" class="empty-tip">
+        <text>暂无上传记录</text>
+      </view>
+      <view wx:else>
+        <view class="history-item" wx:for="{{historyList}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+          <view class="flex-between">
+            <text class="history-name">{{item.name}}</text>
+            <text class="history-arrow">></text>
+          </view>
+          <text class="history-address ellipsis" wx:if="{{item.address}}">{{item.address}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="logout-section">
+      <button class="btn-danger logout-btn" bindtap="logout">退出登录</button>
+    </view>
+  </view>
+</view>

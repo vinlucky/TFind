@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TFind 管理端 - 审核管理</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>TFind</h2>
+            <span>管理端</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a th:href="@{/admin}">仪表盘</a></li>
+            <li><a th:href="@{/admin/users}">用户管理</a></li>
+            <li><a th:href="@{/admin/toilets}">厕所管理</a></li>
+            <li class="active"><a th:href="@{/admin/toilets/pending}">审核管理</a></li>
+            <li><a th:href="@{/admin/deleted}">删除管理</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}">退出登录</a>
+        </div>
+    </nav>
+    <main class="content">
+        <div class="page-header">
+            <h1>审核管理 - 待审核厕所</h1>
+        </div>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>地址</th>
+                    <th>提交者</th>
+                    <th>AI分析</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="toilet : ${toilets}">
+                    <td th:text="${toilet.name}">名称</td>
+                    <td th:text="${toilet.address}">地址</td>
+                    <td th:text="${toilet.openid}">提交者</td>
+                    <td>
+                        <span class="badge badge-info" th:if="${toilet.aiAnalysis != null}">AI已分析</span>
+                        <span class="badge badge-pending" th:unless="${toilet.aiAnalysis != null}">待分析</span>
+                    </td>
+                    <td class="action-cell">
+                        <button class="btn btn-sm btn-success"
+                                th:attr="onclick='approveToilet(\'' + ${toilet.id} + '\')'">审核通过</button>
+                        <button class="btn btn-sm btn-reject"
+                                th:attr="onclick='rejectToilet(\'' + ${toilet.id} + '\')'">审核拒绝</button>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(toilets)}">
+                    <td colspan="5" class="empty-row">暂无待审核厕所</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

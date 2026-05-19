@@ -1,0 +1,39 @@
+<view class="map-container">
+  <map
+    id="toiletMap"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    show-location="true"
+    bindmarkertap="onMarkerTap"
+    bindregionchange="onRegionChange"
+    class="toilet-map"
+  ></map>
+
+  <view class="map-controls">
+    <view class="control-btn" bindtap="refreshMap">
+      <text class="control-icon">⟳</text>
+    </view>
+  </view>
+
+  <view class="bottom-list" wx:if="{{showList && selectedToilet}}">
+    <view class="list-card" bindtap="goToDetail" data-id="{{selectedToilet.id}}">
+      <view class="list-header flex-between">
+        <text class="list-name">{{selectedToilet.name}}</text>
+        <text class="list-go">详情 ></text>
+      </view>
+      <view class="list-info">
+        <text wx:if="{{selectedToilet.floor}}">{{selectedToilet.floor}}</text>
+        <text wx:if="{{selectedToilet.positions}}"> · {{selectedToilet.positions}}个位</text>
+        <text wx:if="{{selectedToilet.cleanScore}}"> · 卫生{{selectedToilet.cleanScore}}</text>
+      </view>
+      <view class="list-tags" wx:if="{{selectedToilet.tags && selectedToilet.tags.length > 0}}">
+        <text class="tag tag-active" wx:for="{{selectedToilet.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+    </view>
+    <view class="close-btn" bindtap="closeList">
+      <text>收起</text>
+    </view>
+  </view>
+</view>

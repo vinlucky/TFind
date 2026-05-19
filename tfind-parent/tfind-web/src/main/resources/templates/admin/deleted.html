@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TFind 管理端 - 删除管理</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+<div class="layout">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>TFind</h2>
+            <span>管理端</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a th:href="@{/admin}">仪表盘</a></li>
+            <li><a th:href="@{/admin/users}">用户管理</a></li>
+            <li><a th:href="@{/admin/toilets}">厕所管理</a></li>
+            <li><a th:href="@{/admin/toilets/pending}">审核管理</a></li>
+            <li class="active"><a th:href="@{/admin/deleted}">删除管理</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <a th:href="@{/logout}">退出登录</a>
+        </div>
+    </nav>
+    <main class="content">
+        <div class="page-header">
+            <h1>删除管理</h1>
+        </div>
+        <div class="tab-container">
+            <div class="tab-header">
+                <button class="tab-btn active" onclick="switchTab('users')">已删除用户</button>
+                <button class="tab-btn" onclick="switchTab('toilets')">已删除厕所</button>
+            </div>
+            <div id="tab-users" class="tab-content active">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>用户ID</th>
+                            <th>角色</th>
+                            <th>删除时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${deletedUsers}">
+                            <td th:text="${user.userId}">userId</td>
+                            <td th:text="${user.role}">角色</td>
+                            <td th:text="${user.delTime != null ? #temporals.format(user.delTime, 'yyyy-MM-dd HH:mm') : '-'}">-</td>
+                            <td class="action-cell">
+                                <button class="btn btn-sm btn-success"
+                                        th:attr="onclick='restoreUser(\'' + ${user.userId} + '\')'">恢复</button>
+                                <button class="btn btn-sm btn-danger"
+                                        th:attr="onclick='physicalDeleteUser(\'' + ${user.userId} + '\')'">物理删除</button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(deletedUsers)}">
+                            <td colspan="4" class="empty-row">暂无已删除用户</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="tab-toilets" class="tab-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>地址</th>
+                            <th>删除时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="toilet : ${deletedToilets}">
+                            <td th:text="${toilet.name}">名称</td>
+                            <td th:text="${toilet.address}">地址</td>
+                            <td th:text="${toilet.deltime != null ? toilet.deltime : '-'}">-</td>
+                            <td class="action-cell">
+                                <button class="btn btn-sm btn-success"
+                                        th:attr="onclick='restoreToilet(\'' + ${toilet.id} + '\')'">恢复</button>
+                                <button class="btn btn-sm btn-danger"
+                                        th:attr="onclick='physicalDeleteToilet(\'' + ${toilet.id} + '\')'">物理删除</button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(deletedToilets)}">
+                            <td colspan="4" class="empty-row">暂无已删除厕所</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

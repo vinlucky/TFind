@@ -1,0 +1,60 @@
+<view class="container">
+  <view class="section mode-section">
+    <view class="section-title">智能推荐</view>
+    <radio-group class="mode-group" bindchange="onModeChange">
+      <label class="mode-item">
+        <radio value="speed" checked="{{mode==='speed'}}" color="#4A90D9" />
+        <text>最快到达</text>
+      </label>
+      <label class="mode-item">
+        <radio value="clean" checked="{{mode==='clean'}}" color="#4A90D9" />
+        <text>最干净</text>
+      </label>
+      <label class="mode-item">
+        <radio value="smart" checked="{{mode==='smart'}}" color="#4A90D9" />
+        <text>AI智能推荐</text>
+      </label>
+    </radio-group>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-container">
+    <text class="loading-text">推荐中...</text>
+  </view>
+
+  <view wx:elif="{{hasResult}}">
+    <view class="toilet-card section" wx:for="{{toilets}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+      <view class="card-top flex-between">
+        <view class="card-left">
+          <text class="card-name">{{item.name}}</text>
+          <view class="card-info">
+            <text wx:if="{{item.floor}}">{{item.floor}}</text>
+            <text wx:if="{{item.positions}}"> · {{item.positions}}个位</text>
+          </view>
+        </view>
+        <view class="card-right">
+          <view class="ai-badge" wx:if="{{item.aiScoreText}}">
+            <text class="ai-badge-text">AI {{item.aiScoreText}}</text>
+          </view>
+          <text class="card-distance">{{item.distanceText}}</text>
+        </view>
+      </view>
+      <view class="card-scores" wx:if="{{item.cleanScore || item.score}}">
+        <text class="score-text" wx:if="{{item.cleanScore}}">卫生 {{item.cleanScore}}</text>
+        <text class="score-text" wx:if="{{item.score}}">评分 {{item.score}}</text>
+      </view>
+      <view class="card-tags" wx:if="{{item.tags && item.tags.length > 0}}">
+        <text class="tag tag-active" wx:for="{{item.tags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+      <view class="card-tags" wx:if="{{item.aiTags && item.aiTags.length > 0}}">
+        <text class="tag ai-tag" wx:for="{{item.aiTags}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+      </view>
+      <view class="card-address ellipsis" wx:if="{{item.address}}">
+        <text>{{item.address}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty-tip">
+    <text>暂无推荐结果</text>
+  </view>
+</view>
