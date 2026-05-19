@@ -12,7 +12,8 @@
   <a href="#核心能力">核心能力</a> ·
   <a href="#系统架构">系统架构</a> ·
   <a href="#web端手机端与电脑端差异">Web 端差异</a> ·
-  <a href="#项目结构">项目结构</a>
+  <a href="#项目结构">项目结构</a> ·
+  <a href=https://gitcode.com/vinforlucky/TFind>GitCode</a>
 </p>
 
 <p align="center">
