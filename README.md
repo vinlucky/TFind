@@ -90,8 +90,8 @@ cd TFind
 DASHSCOPE_API_KEY=sk-your-api-key-here
 
 # 模型选择
-DASHSCOPE_MODEL=qwen-plus
-DASHSCOPE_VISION_MODEL=qwen-vl-plus
+DASHSCOPE_MODEL=your_dashscope_model
+DASHSCOPE_VISION_MODEL=your_dashscope_omni_model
 ```
 
 > 获取 DashScope API Key: https://dashscope.console.aliyun.com/apiKey
